@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { render } from 'react-dom';
 const { formatTime } = require('./components/utils');
 
@@ -15,49 +14,47 @@ class App extends React.Component {
     this.setState({
       time: this.state.time - 1,
     });
-    console.log(this.state.time);
-    console.log(this.state.status);
-
-    // switch(expr) {
-    //   case (this.state.time === 0 && this.state.status === 'work'): 
-    //     this.setState({
-    //       status: 'rest',
-    //       time: 5,
-    //     });
-    //     break;
-    //   case (this.state.time === 0 && this.state.status === 'rest'): 
-    //     this.setState({
-    //       status: 'work',
-    //       time: 10,
-    //     });
-    //     break;
-    // }
 
     if(this.state.time === 0) {
-      console.log('ZMIANA')
-
       if(this.state.status === 'work'){
         this.setState({
           status: 'rest',
-          time: 5,
+          time: 20,
         });
+        this.playBell();
       } else if(this.state.status === 'rest'){
         this.setState({
           status: 'work',
-          time: 10,
+          time: 1200,
         });
+        this.playBell();
       }
     }
   };
 
+  playBell = () => {
+    const audioElement = new Audio('./sounds/bell.wav');
+    audioElement.play();
+  }
+
   startTimer = () => {
     this.setState({
       timer: setInterval(this.step, 1000),
-      time: 10,
+      time: 1200,
       status: 'work',
     });
-    // console.log('kliknięty start')
-    // console.log('time in state', this.state.time)
+  }
+
+  stopTimer = () => {
+    this.setState({
+      timer: clearInterval(this.step),
+      time: 0,
+      status: 'off'
+    })
+  }
+
+  closeApp = () => {
+    window.close();
   }
 
   render() {
@@ -75,15 +72,11 @@ class App extends React.Component {
         {(status === 'rest') && <img src="./images/rest.png" />}
         {(status != 'off') && <div className="timer">{formatTime(time)}</div>}
         {(status === 'off') && <button className="btn" onClick={this.startTimer}>Start</button>}
-        {(status != 'off') && <button className="btn">Stop</button>}
-        <button className="btn btn-close">X</button>
+        {(status != 'off') && <button className="btn" onClick={this.stopTimer}>Stop</button>}
+        <button className="btn btn-close" onClick={this.closeApp}>X</button>
       </div>
     )
   }
 };
-
-App.propTypes = {
-  status: PropTypes.string,
-}
 
 render(<App />, document.querySelector('#app'));
