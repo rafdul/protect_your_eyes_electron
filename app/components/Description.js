@@ -9,8 +9,10 @@ class Description extends React.Component {
 				<p>This app will help you track your time and inform you when it's time to rest.</p>
 			</div>
 		);
-}
-
-}
+	}
+};
 
 export default Description;
+// module.exports = Description;
+
+
